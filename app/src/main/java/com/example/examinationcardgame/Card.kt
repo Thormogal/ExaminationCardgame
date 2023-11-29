@@ -1,6 +1,6 @@
 package com.example.examinationcardgame
 
-enum class Cards (val resourceId: Int){
+enum class Card (val resourceId: Int){
 
     CARD_BACK(R.drawable.background_card),
 
