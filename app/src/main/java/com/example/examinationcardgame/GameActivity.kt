@@ -1,7 +1,11 @@
 package com.example.examinationcardgame
 
+import android.graphics.drawable.AnimationDrawable
 import android.os.Bundle
+import android.util.Log
+import android.widget.FrameLayout
 import android.widget.ImageView
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 
 class GameActivity : AppCompatActivity() {
@@ -15,29 +19,44 @@ class GameActivity : AppCompatActivity() {
         val playButton: ImageView = findViewById(R.id.playButton)
         val allCards = Card.values().toList()
         val allFragments = mutableListOf<CardFragment>()
+        val backCardFragment = CardFragment()
+        backCardFragment.initCard(Card.CARD_BACK)
 
-        for (card in allCards) {
+        val transaction = supportFragmentManager.beginTransaction()
+        transaction.add(R.id.deckContainer, backCardFragment)
+        transaction.commit()
+
+        val firstFragment = CardFragment()
+
+        firstFragment.initCard(Card.CARD_BACK)
+
+
+        for (i in allCards.indices) {
             val fragment = CardFragment()
-            fragment.initCard(card)
+            fragment.initCard(Card.CARD_BACK)
             allFragments.add(fragment)
         }
 
-        for (i in allFragments.indices) {
-            val transaction = supportFragmentManager.beginTransaction()
-            transaction.add(R.id.deckContainer, allFragments[i])
-            if (i != 0) {
-                transaction.hide(allFragments[i])
-            }
-            transaction.commit()
-        }
+
+        val cardsWithoutBack = allCards.filter{ it != Card.CARD_BACK &&
+                it != Card.CLUBS_JACKSAVED && it != Card.CLUBS_JACKSURVIVE }.shuffled()
 
         playButton.setOnClickListener {
-            if (currentCardIndex < allFragments.size - 1) {
+            if (currentCardIndex < cardsWithoutBack.size) {
+                val card = cardsWithoutBack[currentCardIndex]
+
+                val fragment = CardFragment()
+                fragment.initCard(card)
+
                 val transaction = supportFragmentManager.beginTransaction()
-                transaction.hide(allFragments[currentCardIndex])
-                currentCardIndex++
-                transaction.show(allFragments[currentCardIndex])
+                transaction.replace(R.id.deckContainer, fragment)
                 transaction.commit()
+
+                if (card == Card.CLUBS_JACKDEATH) {
+                    Toast.makeText(this, "Ahw shit, Jack got you. You lost the game", Toast.LENGTH_LONG).show()
+                    playButton.isEnabled = false
+                }
+                currentCardIndex++
             }
         }
     }

@@ -7,34 +7,6 @@
     android:background="@drawable/background_game">
 
 
-    <FrameLayout
-        android:id="@+id/deckContainer"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="300dp"
-        app:layout_constraintBottom_toBottomOf="@id/deckImageView"
-        app:layout_constraintEnd_toEndOf="@id/deckImageView"
-        app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@id/deckImageView"
-        app:layout_constraintTop_toTopOf="@id/deckImageView"
-        app:layout_constraintVertical_bias="0.0" />
-
-    <FrameLayout
-        android:id="@+id/revealedCardContainer"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="250dp"
-        android:layout_marginTop="250dp"
-        android:layout_marginEnd="120dp"
-        android:layout_marginBottom="500dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
     <ImageView
         android:id="@+id/passButton"
         android:layout_width="0dp"
@@ -70,34 +42,17 @@
         app:layout_constraintStart_toEndOf="@+id/playButton"
         app:srcCompat="@drawable/defendbutton" />
 
-    <ImageView
-        android:id="@+id/deckImageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="25dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="20dp"
-        android:layout_marginBottom="300dp"
-        android:adjustViewBounds="true"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/showingImageView"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@drawable/background_card" />
-
-    <ImageView
-        android:id="@+id/showingImageView"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginStart="20dp"
-        android:layout_marginTop="200dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="300dp"
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/deckContainer"
+        android:name="com.example.examinationcardgame.CardFragment"
+        android:layout_width="272dp"
+        android:layout_height="381dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/deckImageView"
+        app:layout_constraintHorizontal_bias="0.496"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:adjustViewBounds="true"
-        app:srcCompat="@drawable/background_card" />
+        tools:layout="@layout/fragment_card" />
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>
