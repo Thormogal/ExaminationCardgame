@@ -10,6 +10,7 @@ import android.widget.ImageView
 class CardFragment : Fragment() {
     private lateinit var fragmentView : ImageView
     private var card: Card? = null
+    private var isPassButtonClicked: Boolean = false
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -22,15 +23,19 @@ class CardFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        fragmentView.setImageResource(Card.CARD_BACKGROUND.resourceId)
         card?.let { setCard(it) }
     } //if card != null then setCard will run.
 
-    fun initCard(card: Card) {
+    fun initCard(card: Card, isPassButtonClicked: Boolean = false) {
         this.card = card
+        this.isPassButtonClicked = isPassButtonClicked
     }
 
     fun setCard(card: Card) {
-        fragmentView.setImageResource(card.resourceId)
+        if (!isPassButtonClicked) {
+            fragmentView.setImageResource(card.resourceId)
+        }
         fragmentView.tag = card
     }
 }

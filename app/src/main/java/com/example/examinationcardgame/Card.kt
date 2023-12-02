@@ -2,7 +2,7 @@ package com.example.examinationcardgame
 
 enum class Card (val resourceId: Int){
 
-    CARD_BACK(R.drawable.background_card),
+    CARD_BACKGROUND(R.drawable.background_card),
 
     CLUBS_1(R.drawable.clubs1),
     CLUBS_2(R.drawable.clubs2),
