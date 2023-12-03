@@ -22,8 +22,10 @@ class GameActivity : AppCompatActivity() {
         val cardBackgroundFragment = CardFragment()
         cardBackgroundFragment.initCard(Card.CARD_BACKGROUND)
         val allCards = Card.values().toMutableList()
-        val playableCards = allCards.filter{ it != Card.CARD_BACKGROUND &&
-                it != Card.CLUBS_JACKSAVED && it != Card.CLUBS_JACKSURVIVE }.shuffled().toMutableList()
+        val playableCards = allCards.filter {
+            it != Card.CARD_BACKGROUND &&
+                    it != Card.CLUBS_JACKSAVED && it != Card.CLUBS_JACKSURVIVE
+        }.shuffled().toMutableList()
 
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.deckContainer, cardBackgroundFragment)
@@ -39,12 +41,20 @@ class GameActivity : AppCompatActivity() {
             defendButton.isEnabled = false
         }
 
+        fun pressedButtonAppearance(button: ImageView) {
+            button.imageAlpha = 150
+            button.postDelayed( {
+                button.imageAlpha = 255}, 100)
+        }
+
         passButton.setOnClickListener {
+            pressedButtonAppearance(passButton)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = true
                 val card = playableCards[currentCardIndex]
                 playableCards.removeAt(currentCardIndex)
-                val RandomIndex = Random.nextInt(playableCards.size - currentCardIndex) + currentCardIndex
+                val RandomIndex =
+                    Random.nextInt(playableCards.size - currentCardIndex) + currentCardIndex
                 playableCards.add(RandomIndex, card)
 
                 val fragment = CardFragment()
@@ -56,6 +66,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         playButton.setOnClickListener {
+            pressedButtonAppearance(playButton)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
                 val card = playableCards[currentCardIndex]
@@ -66,8 +77,10 @@ class GameActivity : AppCompatActivity() {
                 transaction.commit()
 
                 if (card == Card.CLUBS_JACKDEATH) {
-                    Toast.makeText(this, "Jack caught you off guard. RIP (Ripped In Pieces)",
-                        Toast.LENGTH_LONG).show()
+                    Toast.makeText(
+                        this, "Jack caught you off guard. RIP (Ripped In Pieces)",
+                        Toast.LENGTH_LONG
+                    ).show()
                     inactivateButtons()
                 }
                 currentCardIndex++
@@ -75,6 +88,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         defendButton.setOnClickListener {
+            pressedButtonAppearance(defendButton)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
                 var card = playableCards[currentCardIndex]
@@ -89,13 +103,15 @@ class GameActivity : AppCompatActivity() {
                 transaction.commit()
 
                 if (card == Card.CLUBS_JACKSURVIVE) {
-                    Toast.makeText(this,
+                    Toast.makeText(
+                        this,
                         "Jack is now unconscious and you survived. Congratulations!",
-                        Toast.LENGTH_LONG).show()
+                        Toast.LENGTH_LONG
+                    ).show()
                     inactivateButtons()
                 }
                 currentCardIndex++
             }
         }
-        }
     }
+}
