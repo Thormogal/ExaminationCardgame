@@ -1,10 +1,8 @@
 package com.example.examinationcardgame
 
 import android.app.Activity
-import android.content.Context
 import android.graphics.Color
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.animation.AnimationUtils
 import android.widget.ImageView
@@ -20,28 +18,40 @@ class GameActivity : AppCompatActivity() {
     private lateinit var playButton: ImageView
     private lateinit var defendButton: ImageView
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
 
-        val borderFrame = findViewById<View>(R.id.border_frame)
-        val edgeViews = listOf(R.id.topEdge, R.id.bottomEdge, R.id.leftEdge, R.id.rightEdge)
         passButton = findViewById(R.id.passButton)
         playButton = findViewById(R.id.playButton)
         defendButton = findViewById(R.id.defendButton)
+        val borderFrame = findViewById<View>(R.id.border_frame)
+        val edgeViews = listOf(R.id.topEdge, R.id.bottomEdge, R.id.leftEdge, R.id.rightEdge)
         var isPassButtonClicked = false
+        val allCards = Card.values().toMutableList()
+        val playableCards = allCards.filterNot {
+            it in listOf(Card.CARD_BACKGROUND, Card.CLUBS_JACKSAVED, Card.CLUBS_JACKSURVIVE)
+        }.shuffled().toMutableList()
         val cardBackgroundFragment = CardFragment()
         cardBackgroundFragment.initCard(Card.CARD_BACKGROUND)
-        val allCards = Card.values().toMutableList()
-        val playableCards = allCards.filter {
-            it != Card.CARD_BACKGROUND && it != Card.CLUBS_JACKSAVED && it != Card.CLUBS_JACKSURVIVE
-        }.shuffled().toMutableList()
         val transaction = supportFragmentManager.beginTransaction()
         transaction.add(R.id.deckContainer, cardBackgroundFragment)
         transaction.commit()
 
+        fun jackCantBeFirstCard(playableCards: MutableList<Card>, currentCardIndex: Int) {
+            if (currentCardIndex == 0) {
+                if (playableCards[0] == Card.CLUBS_JACKDEATH) {
+                    val randomPlace = (1 until playableCards.size).random()
+                    playableCards[0] = playableCards[randomPlace]
+                    playableCards[randomPlace] = Card.CLUBS_JACKDEATH
+                }
+            }
+        }
+
         passButton.setOnClickListener {
             pressedButtonAppearance(passButton)
+            jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = true
                 val card = playableCards[currentCardIndex]
@@ -55,12 +65,13 @@ class GameActivity : AppCompatActivity() {
                 transaction.replace(R.id.deckContainer, fragment)
                 transaction.commit()
 
-                isClubsJackDeathNear(playableCards, currentCardIndex, borderFrame, this, edgeViews)
+                jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
             }
         }
 
         playButton.setOnClickListener {
             pressedButtonAppearance(playButton)
+            jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
                 val card = playableCards[currentCardIndex]
@@ -77,12 +88,13 @@ class GameActivity : AppCompatActivity() {
                     inactivateButtons()
                 }
                 currentCardIndex++
-                isClubsJackDeathNear(playableCards, currentCardIndex, borderFrame, this, edgeViews)
+                jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
             }
         }
 
         defendButton.setOnClickListener {
             pressedButtonAppearance(defendButton)
+            jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
                 var card = playableCards[currentCardIndex]
@@ -104,33 +116,47 @@ class GameActivity : AppCompatActivity() {
                     inactivateButtons()
                 }
                 currentCardIndex++
-                isClubsJackDeathNear(playableCards, currentCardIndex, borderFrame, this, edgeViews)
+                jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
             }
         }
     }
-    fun isClubsJackDeathNear(cards: MutableList<Card>, currentIndex: Int, borderFrame: View, activity: Activity, edgeViews: List<Int>): Boolean {
-        val upcomingCards = cards.subList(currentIndex, min(currentIndex + 5, cards.size))
-        val isNear = Card.CLUBS_JACKDEATH in upcomingCards
+    private var jackWarning = false
 
-        if (isNear) {
+
+    private fun jackIsComing(cards: MutableList<Card>, currentIndex: Int, borderFrame: View, activity: Activity, edgeViews: List<Int>): Boolean {
+        val upcomingCards = cards.subList(currentIndex, min(currentIndex + 5, cards.size)).toMutableList()
+        upcomingCards.shuffle()
+        val jackIsClose = Card.CLUBS_JACKDEATH in upcomingCards
+
+        if (jackIsClose && !jackWarning) {
+            val randomPlace = (currentIndex..min(currentIndex + 4, cards.size - 1)).random()
+            val jackIndex = cards.indexOf(Card.CLUBS_JACKDEATH)
+            if (jackIndex != -1) {
+                cards[jackIndex] = cards[randomPlace]
+                cards[randomPlace] = Card.CLUBS_JACKDEATH
+            }
+
             val blinkAnimation = AnimationUtils.loadAnimation(activity, R.anim.blink_animation)
             borderFrame.startAnimation(blinkAnimation)
             edgeViews.forEach { activity.findViewById<View>(it).setBackgroundColor(Color.RED) }
-        } else {
+
+            jackWarning = true
+        } else if (!jackIsClose) {
             borderFrame.clearAnimation()
             edgeViews.forEach { activity.findViewById<View>(it).setBackgroundColor(Color.TRANSPARENT) }
+            jackWarning = false
         }
 
-        return isNear
+        return jackIsClose
     }
 
-    fun inactivateButtons() {
+    private fun inactivateButtons() {
         passButton.isEnabled = false
         playButton.isEnabled = false
         defendButton.isEnabled = false
     }
 
-    fun pressedButtonAppearance(button: ImageView) {
+    private fun pressedButtonAppearance(button: ImageView) {
         button.imageAlpha = 150
         button.postDelayed( {
             button.imageAlpha = 255}, 100)

@@ -17,7 +17,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/playButton"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/passbutton" />
+        app:srcCompat="@drawable/button_pass" />
 
     <ImageView
         android:id="@+id/playButton"
@@ -28,7 +28,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toStartOf="@+id/defendButton"
         app:layout_constraintStart_toEndOf="@+id/passButton"
-        app:srcCompat="@drawable/playbutton" />
+        app:srcCompat="@drawable/button_play" />
 
     <ImageView
         android:id="@+id/defendButton"
@@ -40,7 +40,7 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/playButton"
-        app:srcCompat="@drawable/defendbutton" />
+        app:srcCompat="@drawable/button_defend" />
 
     <androidx.fragment.app.FragmentContainerView
         android:id="@+id/deckContainer"
