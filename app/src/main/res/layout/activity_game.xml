@@ -54,5 +54,37 @@
         app:layout_constraintTop_toTopOf="parent"
         tools:layout="@layout/fragment_card" />
 
+    <FrameLayout
+        android:id="@+id/border_frame"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:id="@+id/topEdge"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/leftEdge"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/bottomEdge"
+            android:layout_width="match_parent"
+            android:layout_height="10dp"
+            android:layout_gravity="bottom"
+            android:background="@android:color/transparent" />
+
+        <View
+            android:id="@+id/rightEdge"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:layout_gravity="end"
+            android:background="@android:color/transparent" />
+
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
