@@ -1,6 +1,7 @@
 package com.example.examinationcardgame
 
 import android.app.Activity
+import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
@@ -26,9 +27,11 @@ class GameActivity : AppCompatActivity() {
         passButton = findViewById(R.id.passButton)
         playButton = findViewById(R.id.playButton)
         defendButton = findViewById(R.id.defendButton)
+        val specialCardView: ImageView = findViewById(R.id.specialCardView)
         val borderFrame = findViewById<View>(R.id.border_frame)
         val edgeViews = listOf(R.id.topEdge, R.id.bottomEdge, R.id.leftEdge, R.id.rightEdge)
         var isPassButtonClicked = false
+        var clubsJackDeathCount = 1
         val allCards = Card.values().toMutableList()
         val playableCards = allCards.filterNot {
             it in listOf(Card.CARD_BACKGROUND, Card.CLUBS_JACKSAVED, Card.CLUBS_JACKSURVIVE)
@@ -47,6 +50,28 @@ class GameActivity : AppCompatActivity() {
                     playableCards[randomPlace] = Card.CLUBS_JACKDEATH
                 }
             }
+        }
+
+        fun animateSpecialCard() {
+            val screenWidth = Resources.getSystem().displayMetrics.widthPixels
+            val screenHeight = Resources.getSystem().displayMetrics.heightPixels
+
+            specialCardView.animate()
+                .scaleX(3.2f)
+                .scaleY(3.0f)
+                .translationX(screenWidth * -0.39f)
+                .translationY(screenHeight * 0.37f)
+                .setDuration(1000)
+                .withEndAction {
+                    specialCardView.visibility = View.GONE
+                }
+                .start()
+        }
+
+        fun addSpecialCard(playableCards: MutableList<Card>) {
+            val randomIndex = Random.nextInt(playableCards.size)
+            playableCards.add(randomIndex, Card.CLUBS_JACKDEATH)
+            animateSpecialCard()
         }
 
         passButton.setOnClickListener {
@@ -75,6 +100,11 @@ class GameActivity : AppCompatActivity() {
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
                 val card = playableCards[currentCardIndex]
+                if (card == Card.CLUBS_4) {
+                    addSpecialCard(playableCards)
+                    clubsJackDeathCount++
+                }
+
                 val fragment = CardFragment()
                 fragment.initCard(card, isPassButtonClicked)
                 val transaction = supportFragmentManager.beginTransaction()
@@ -101,19 +131,22 @@ class GameActivity : AppCompatActivity() {
                 if (card == Card.CLUBS_JACKDEATH) {
                     card = Card.CLUBS_JACKSURVIVE
                     playableCards[currentCardIndex] = card
+                    clubsJackDeathCount--
                 }
                 val fragment = CardFragment()
                 fragment.initCard(card, isPassButtonClicked)
                 val transaction = supportFragmentManager.beginTransaction()
                 transaction.replace(R.id.deckContainer, fragment)
                 transaction.commit()
-                if (card == Card.CLUBS_JACKSURVIVE) {
+                if (card == Card.CLUBS_JACKSURVIVE && clubsJackDeathCount == 0) {
                     Toast.makeText(
                         this,
-                        "Jack is now unconscious and you survived. Congratulations!",
-                        Toast.LENGTH_LONG
-                    ).show()
+                        "Jack is now unconscious and you survived. Congratulations!", Toast.LENGTH_LONG).show()
                     inactivateButtons()
+                } else {
+                    if (card == Card.CLUBS_JACKSURVIVE && clubsJackDeathCount == 1)
+                        Toast.makeText(this,
+                            "Good work! One more Jack to survive against", Toast.LENGTH_LONG).show()
                 }
                 currentCardIndex++
                 jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
@@ -136,8 +169,8 @@ class GameActivity : AppCompatActivity() {
                 cards[randomPlace] = Card.CLUBS_JACKDEATH
             }
 
-            val blinkAnimation = AnimationUtils.loadAnimation(activity, R.anim.blink_animation)
-            borderFrame.startAnimation(blinkAnimation)
+            val dangerAnimation = AnimationUtils.loadAnimation(activity, R.anim.danger_animation)
+            borderFrame.startAnimation(dangerAnimation)
             edgeViews.forEach { activity.findViewById<View>(it).setBackgroundColor(Color.RED) }
 
             jackWarning = true
@@ -161,4 +194,5 @@ class GameActivity : AppCompatActivity() {
         button.postDelayed( {
             button.imageAlpha = 255}, 100)
     }
+
 }
