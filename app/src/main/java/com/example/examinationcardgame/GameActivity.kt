@@ -115,11 +115,18 @@ class GameActivity : AppCompatActivity() {
                 transaction.replace(R.id.deckContainer, fragment)
                 transaction.commit()
                 if (card == Card.CLUBS_JACKDEATH) {
-                    Toast.makeText(
-                        this, "Jack caught you off guard. RIP (Ripped In Pieces)",
-                        Toast.LENGTH_LONG
-                    ).show()
-                    inactivateButtons()
+                    if (currentCardIndex == playableCards.size - 1) {
+                        Toast.makeText(
+                            this, "You knew Jack was coming. You knocked him unconscious. You win!",
+                            Toast.LENGTH_LONG
+                        ).show()
+                    } else {
+                        Toast.makeText(
+                            this, "Jack caught you off guard. RIP (Ripped In Pieces)",
+                            Toast.LENGTH_LONG
+                        ).show()
+                        inactivateButtons()
+                    }
                 }
                 currentCardIndex++
                 jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
