@@ -57,8 +57,8 @@ class GameActivity : AppCompatActivity() {
             val screenHeight = Resources.getSystem().displayMetrics.heightPixels
 
             specialCardView.animate()
-                .scaleX(3.2f)
-                .scaleY(3.0f)
+                .scaleX(2.8f)
+                .scaleY(2.6f)
                 .translationX(screenWidth * -0.39f)
                 .translationY(screenHeight * 0.37f)
                 .setDuration(1000)
@@ -75,7 +75,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         passButton.setOnClickListener {
-            pressedButtonAppearance(passButton)
+            ButtonUtils.pressedButtonAppearance(passButton)
             jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = true
@@ -95,7 +95,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         playButton.setOnClickListener {
-            pressedButtonAppearance(playButton)
+            ButtonUtils.pressedButtonAppearance(playButton)
             jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
@@ -123,7 +123,7 @@ class GameActivity : AppCompatActivity() {
         }
 
         defendButton.setOnClickListener {
-            pressedButtonAppearance(defendButton)
+            ButtonUtils.pressedButtonAppearance(defendButton)
             jackCantBeFirstCard(playableCards, currentCardIndex)
             if (currentCardIndex < playableCards.size) {
                 isPassButtonClicked = false
@@ -188,11 +188,4 @@ class GameActivity : AppCompatActivity() {
         playButton.isEnabled = false
         defendButton.isEnabled = false
     }
-
-    private fun pressedButtonAppearance(button: ImageView) {
-        button.imageAlpha = 150
-        button.postDelayed( {
-            button.imageAlpha = 255}, 100)
-    }
-
 }
