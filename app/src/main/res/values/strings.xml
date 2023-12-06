@@ -2,4 +2,36 @@
     <string name="app_name">ExaminationCardgame</string>
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+    <string name="game_rules" formatted="false"><b>Main goal:</b>
+        Jack of Clubs is the one card that you shall avoid at all costs!
+        If Jack is the one card that comes up when you press the \"PLAY\" button, you lose.
+        You can either use the \"DEFEND\" button to knock Jack unconscious and win this way
+        or you can use the \"PASS\" button and win by having Jack being the last card.\n
+        \nBut you need to be strategic! You can only use \"DEFEND\" once per three turns and
+        \"PASS\" every second turn. Luckily, I am a nice guy and decided to implement an
+        animation that warns you when Jack is approaching. But I suck a precision…
+        Jack might be the first, second, third, fourth or fifth card.\n
+
+        \n<b>Four of Clubs:</b>
+        \nFour of Clubs is a scary one. If you encounter this card the Four of Clubs will
+        duplicate Jack of Clubs and all of a sudden you will have to defend yourself
+        against two Jacks instead of one! But, \"double the pain - double the gain\" right?\n
+
+        \n<b>Queen of Hearts:</b>
+        \nIf you play the Queen of Hearts card she will protect you the next time you
+        accidentally play Jack of Clubs. Using her lovely charm and beautiful smile
+        she distracts Jack and shuffles him back into the remaining deck.
+        Love conquers all! \n
+
+        \n<b>King of Spades:</b>
+        \nThe King of Spades is allied with Jack of Clubs. Their teamwork paid off and
+        they managed to erase the Queen of Hearts from both the history books and this game.
+        If you already have the Queen of Hearts by your side, they unfortunately manage
+        to kill her without you having any chance to prevent them.
+
+
+
+
+    </string>
 </resources>
