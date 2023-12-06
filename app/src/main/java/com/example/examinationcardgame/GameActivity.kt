@@ -1,12 +1,15 @@
 package com.example.examinationcardgame
 
 import android.app.Activity
+import android.content.Intent
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Bundle
 import android.view.View
 import android.view.animation.AnimationUtils
+import android.widget.ImageButton
 import android.widget.ImageView
+import android.widget.PopupMenu
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import kotlin.random.Random
@@ -23,7 +26,7 @@ class GameActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_game)
-
+        val settingsButton: ImageButton = findViewById(R.id.settingsButton)
         passButton = findViewById(R.id.passButton)
         playButton = findViewById(R.id.playButton)
         defendButton = findViewById(R.id.defendButton)
@@ -34,7 +37,8 @@ class GameActivity : AppCompatActivity() {
         var clubsJackDeathCount = 1
         val allCards = Card.values().toMutableList()
         val playableCards = allCards.filterNot {
-            it in listOf(Card.CARD_BACKGROUND, Card.CLUBS_JACKSAVED, Card.CLUBS_JACKSURVIVE)
+            it in listOf(Card.CARD_BACKGROUND, Card.CLUBS_JACKSAVED, Card.CLUBS_JACKSURVIVE,
+                Card.SPADES_KING, Card.HEARTS_QUEEN, Card.HEARTS_KING, Card.CLUBS_KING)
         }.shuffled().toMutableList()
         val cardBackgroundFragment = CardFragment()
         cardBackgroundFragment.initCard(Card.CARD_BACKGROUND)
@@ -152,7 +156,29 @@ class GameActivity : AppCompatActivity() {
                 jackIsComing(playableCards, currentCardIndex, borderFrame, this, edgeViews)
             }
         }
+
+        settingsButton.setOnClickListener {
+            val popupMenu = PopupMenu(this, settingsButton)
+            popupMenu.menuInflater.inflate(R.menu.settings_menu, popupMenu.menu)
+
+            popupMenu.setOnMenuItemClickListener { menuItem ->
+                when (menuItem.itemId) {
+                    R.id.menu_rules -> {
+                        val intent = Intent(this, RulesActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                        startActivity(intent)}
+                    R.id.menu_main -> {
+                        val intent = Intent(this, MainActivity::class.java)
+                        intent.addFlags(Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+                        startActivity(intent)
+                    }
+                }
+                true
+            }
+            popupMenu.show()
+        }
     }
+
     private var jackWarning = false
 
 

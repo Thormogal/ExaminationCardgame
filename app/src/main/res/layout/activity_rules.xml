@@ -39,7 +39,7 @@
     </ScrollView>
 
     <ImageView
-        android:id="@+id/menuButton"
+        android:id="@+id/backButton"
         android:layout_width="102dp"
         android:layout_height="57dp"
         android:layout_marginTop="15dp"
@@ -47,6 +47,6 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:srcCompat="@drawable/button_menu" />
+        app:srcCompat="@drawable/button_back" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
