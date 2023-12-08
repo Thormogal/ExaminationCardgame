@@ -30,9 +30,12 @@ class CardFragment : Fragment() {
     fun initCard(card: Card, isPassButtonClicked: Boolean = false) {
         this.card = card
         this.isPassButtonClicked = isPassButtonClicked
+        if (this::fragmentView.isInitialized) {
+            setCard(card)
+        }
     }
 
-    fun setCard(card: Card) {
+    private fun setCard(card: Card) {
         if (!isPassButtonClicked) {
             fragmentView.setImageResource(card.resourceId)
         }
